@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const passport = require("../config/passport");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const register = async (req, res) => {
   try {
     const { name, email, password, role, company } = req.body;
@@ -49,7 +51,6 @@ const login = async (req, res) => {
 };
 
 const me = async (req, res) => {
-
   try {
     const user = await User.findById(req.user.id).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -60,13 +61,22 @@ const me = async (req, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
-  try {
+   try {
     const userId = req.user.id;
     const updateFields = req.body;
+   
+    if (req.file) {
+      updateFields.resume = req.file.path;
+    }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { 
-      new: true 
+    if (req.body.profilePicture) {
+      updateFields.profilePicture = req.body.profilePicture;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
     }).select("-password");
+    console.log("--------", updatedUser);
 
     res.json(updatedUser);
   } catch (error) {
@@ -74,6 +84,91 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const uploadResume = async (req, res) => {
+  console.log("Received resume file:", req.file);
 
+  try {
+    if (!req.file) {
+      throw new Error("No file uploaded.");
+    }
 
-module.exports = { register, login, me ,updateUserProfile};
+    const userId = req.user.id;
+    const resumePath = req.file.path; 
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { resume: resumePath },
+      { new: true }
+    ).select("-password");
+    console.log("updated user...", updatedUser);
+
+    await updatedUser.save();
+    res.json({ resumePath }); 
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const fetchApplicant = async (req, res) => {
+  try {
+    const applicant = await User.findById(req.params.id);
+    if (!applicant) {
+      return res.status(404).json({ message: "Applicant not found" });
+    }
+    res.json(applicant);
+  } catch (error) {
+    console.error("Error fetching applicant details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const googleLogin = async (req, res) => {
+  try {
+    const { token } = req.body;
+        const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    
+    const { email, name, picture } = ticket.getPayload();
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      user = new User({
+        name,
+        email,
+        profilePicture: picture,
+        password: "google-auth-user", 
+        role: "jobseeker", 
+        socialLogin: true,
+        provider: "google",
+      });
+
+      await user.save();
+    }
+    onsole.log("user._id", user._id);
+    const authToken = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    res.json({ token: authToken, user });
+  } catch (error) {
+    res.status(400).json({ message: "Google authentication failed" });
+  }
+};
+
+module.exports = {
+  register,
+  login,
+  me,
+  updateUserProfile,
+  uploadResume,
+  fetchApplicant,
+  googleLogin,
+};

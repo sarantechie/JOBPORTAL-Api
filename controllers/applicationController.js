@@ -1,5 +1,6 @@
 const Application = require("../models/Application");
 const Notification = require("../models/Notification");
+const User = require("../models/User");
 
 const applyJob = async (req, res) => {
   // console.log("user detail in apply job", req.user.id);
@@ -51,7 +52,7 @@ const getJobApplications = async (req, res) => {
     const applications = await Application.find({ jobId })
       .populate({
         path: "jobSeekerId",
-        select: "name email",
+        select: "name email experience education phone",
       })
       .select("-__v")
       .sort({ createdAt: -1 });
@@ -134,6 +135,7 @@ const withdrawApplication = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 module.exports = {
   applyJob,

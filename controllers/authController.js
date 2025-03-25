@@ -61,10 +61,10 @@ const me = async (req, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
-   try {
+  try {
     const userId = req.user.id;
     const updateFields = req.body;
-   
+
     if (req.file) {
       updateFields.resume = req.file.path;
     }
@@ -93,7 +93,7 @@ const uploadResume = async (req, res) => {
     }
 
     const userId = req.user.id;
-    const resumePath = req.file.path; 
+    const resumePath = req.file.path;
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
@@ -103,7 +103,7 @@ const uploadResume = async (req, res) => {
     console.log("updated user...", updatedUser);
 
     await updatedUser.save();
-    res.json({ resumePath }); 
+    res.json({ resumePath });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -125,14 +125,15 @@ const fetchApplicant = async (req, res) => {
 const googleLogin = async (req, res) => {
   try {
     const { token } = req.body;
-        const ticket = await client.verifyIdToken({
+    console.log("Received Google token:", token);
+    const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+    console.log("Ticket verified:", ticket);
 
-    
     const { email, name, picture } = ticket.getPayload();
-
+    console.log("User payload:", { email, name, picture });
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -140,15 +141,15 @@ const googleLogin = async (req, res) => {
         name,
         email,
         profilePicture: picture,
-        password: "google-auth-user", 
-        role: "jobseeker", 
+        password: "google-auth-user",
+        role: "jobseeker",
         socialLogin: true,
         provider: "google",
       });
 
       await user.save();
     }
-    
+
     const authToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET_KEY,
@@ -159,7 +160,11 @@ const googleLogin = async (req, res) => {
 
     res.json({ token: authToken, user });
   } catch (error) {
-    res.status(400).json({ message: "Google authentication failed" });
+    console.error("Full Google auth error:", error);
+    res.status(400).json({
+      message: "Google authentication failed",
+      error: error.message,
+    });
   }
 };
 

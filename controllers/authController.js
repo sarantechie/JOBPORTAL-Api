@@ -148,7 +148,7 @@ const googleLogin = async (req, res) => {
 
       await user.save();
     }
-    onsole.log("user._id", user._id);
+    
     const authToken = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET_KEY,

@@ -136,8 +136,9 @@ const googleLogin = async (req, res) => {
     console.log("Ticket verified:", ticket);
 
     const { email, name, picture } = ticket.getPayload();
-    console.log("User payload:", { email, name, picture });
     
+    console.log("User payload:", { email, name, picture });
+
     let user = await User.findOne({ email });
 
     if (!user) {

@@ -15,15 +15,15 @@ require("./config/passport");
 connectDB();
 
 app.use(express.json({ limit: "50mb" }));
-const corsOptions = {
-  origin: [
-    "https://jobportal-react-u7vz.vercel.app",
-  ],
-  credentials: true,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-// app.use(cors({ credentials: true }));
+// const corsOptions = {
+// //   origin: [
+// //     "https://jobportal-react-u7vz.vercel.app",
+// //   ],
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// };
+// app.use(cors(corsOptions));
+app.use(cors({ credentials: true }));
 app.use(
   session({
     secret: process.env.SECRET_KEY,

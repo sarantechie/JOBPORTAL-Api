@@ -123,6 +123,8 @@ const fetchApplicant = async (req, res) => {
 };
 
 const googleLogin = async (req, res) => {
+  console.log("this..");
+  
   try {
     const { token } = req.body;
     console.log("Received Google token:", token);

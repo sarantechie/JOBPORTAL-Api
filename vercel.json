@@ -13,6 +13,7 @@
     }
   ],
   "env": {
+    "MONGO_URI":"mongodb+srv://sarantechie:saran2205@cluster0.ppl8z.mongodb.net/JOB_PORTAL",
     "JWT_SECRET_KEY": "b37cf3a1d41cd29b20a7467b4a749e86a1484014af897c33298c32a2d9ec0f08",
     "GOOGLE_CLIENT_ID": "112310389296-usiih97v8r3oi4brpmhcc3h4diha72e3.apps.googleusercontent.com",
     "GOOGLE_CLIENT_SECRET": "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",

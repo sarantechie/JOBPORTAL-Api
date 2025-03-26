@@ -18,6 +18,6 @@
       "GOOGLE_CLIENT_ID":"112310389296-usiih97v8r3oi4brpmhcc3h4diha72e3.apps.googleusercontent.com",
       "GOOGLE_CLIENT_SECRET":"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",
       "GOOGLE_CALLBACK_URL":"https://jobportalapi.vercel.app/api/auth/google/callback",
-      "SECRET_KEY ":"b37cf3a1d41cd29b20a7467b4a749e86a1484014af897c33298c32a2d9ec0f08"
+      "SECRET_KEY":"b37cf3a1d41cd29b20a7467b4a749e86a1484014af897c33298c32a2d9ec0f08"
         }
   }

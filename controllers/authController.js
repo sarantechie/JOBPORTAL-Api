@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const passport = require("../config/passport");
 const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const clientId=process.env.GOOGLE_CLIENT_ID;
+const client = new OAuth2Client(clientId);
 const register = async (req, res) => {
   try {
     const { name, email, password, role, company } = req.body;

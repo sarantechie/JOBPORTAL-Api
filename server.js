@@ -4,13 +4,13 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+// const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const path = require("path");
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 const connectDB = require("./config/db");
-require("./config/passport");
+// require("./config/passport");
 
 connectDB();
 

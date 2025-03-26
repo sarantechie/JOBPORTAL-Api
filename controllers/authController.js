@@ -137,6 +137,7 @@ const googleLogin = async (req, res) => {
 
     const { email, name, picture } = ticket.getPayload();
     console.log("User payload:", { email, name, picture });
+    
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -149,7 +150,6 @@ const googleLogin = async (req, res) => {
         socialLogin: true,
         provider: "google",
       });
-
       await user.save();
     }
 

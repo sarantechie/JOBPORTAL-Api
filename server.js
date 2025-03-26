@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
+const MemoryStore = require('memorystore')(session)
 // const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const path = require("path");
 dotenv.config();
@@ -26,6 +27,10 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cors({ credentials: true }));
 app.use(
   session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+      checkPeriod: 86400000 
+    }),
     secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: false,

@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const passport = require("../config/passport");
+// const passport = require("../config/passport");
 const { OAuth2Client } = require("google-auth-library");
 const clientId=process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(clientId);

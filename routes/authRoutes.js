@@ -12,7 +12,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
 const upload = require("../config/multer");
-const passport = require("../config/passport");
+// const passport = require("../config/passport");
 
 router.use(express.json());
 router.post("/register", register);

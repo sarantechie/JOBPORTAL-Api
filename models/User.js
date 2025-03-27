@@ -28,7 +28,13 @@ const UserSchema = new mongoose.Schema(
         currentlyWorking: Boolean,
       },
     ],
-    resume: { type: String },
+    resume: {
+      fileId: mongoose.Schema.Types.ObjectId,
+      filename: String,
+      originalName: String,
+      contentType: String,
+      uploadDate: Date
+    },
     profilePicture: { type: String },
     companyName: { type: String },
     companyWebsite: { type: String },

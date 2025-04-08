@@ -1,13 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-// const passport = require("../config/passport");
 const { OAuth2Client } = require("google-auth-library");
 const clientId=process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(clientId);
 const register = async (req, res) => {
   try {
-    const { name, email, password, role, company } = req.body;
+    const { name, email, password, role, companyName } = req.body;
 
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "User already exists" });
@@ -15,11 +14,12 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     user = new User({
+      companyName,
       name,
       email,
       password: hashedPassword,
       role,
-      company: role === "employer" ? company : null,
+      company: role === "employer" ? true : false,
     });
 
     await user.save();
@@ -62,6 +62,7 @@ const me = async (req, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
+  console.log("Received update request:", req.body);
   try {
     const userId = req.user.id;
     const updateFields = req.body;

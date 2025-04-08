@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: {
+      type: String,
+      required: function () {
+        return this.role === "jobseeker";
+      },
+    },
     email: { type: String, required: true, unique: true },
     password: { type: String },
     role: { type: String, enum: ["jobseeker", "employer"], required: true },
@@ -16,6 +21,7 @@ const UserSchema = new mongoose.Schema(
         fieldOfStudy: String,
         startDate: Date,
         endDate: Date,
+        currentlyStudying: Boolean,
       },
     ],
     experience: [
@@ -30,7 +36,12 @@ const UserSchema = new mongoose.Schema(
     ],
     resume: { type: String },
     profilePicture: { type: String },
-    companyName: { type: String },
+    companyName: {
+      type: String,
+      required: function () {
+        return this.role === "employer";
+      },
+    },
     companyWebsite: { type: String },
     industry: { type: String },
     logo: { type: String },

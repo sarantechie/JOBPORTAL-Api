@@ -27,7 +27,12 @@ const getJobs = async (req, res) => {
 
 const getJob = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id);
+    const job = await Job.findById(req.params.id).populate("employerId", [
+      "email",
+      "companyName",
+      "companyWebsite",
+      "logo",
+    ]);
     res.json(job);
   } catch (error) {
     res.status(500).json({ error: error.message });

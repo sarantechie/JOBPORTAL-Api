@@ -3,8 +3,6 @@ const Notification = require("../models/Notification");
 const User = require("../models/User");
 
 const applyJob = async (req, res) => {
-  // console.log("user detail in apply job", req.user.id);
-
   try {
     const { jobId } = req.body;
     const application = new Application({ jobId, jobSeekerId: req.user.id });
@@ -101,7 +99,7 @@ const getJobsAppliedByUser = async (req, res) => {
     const applications = await Application.find({ jobSeekerId: userId })
       .populate({
         path: "jobId",
-        select: "title location description",
+        select: "title companyName location description",
       })
       .sort({ createdAt: -1 });
     res.status(200).json(applications);
